@@ -11,16 +11,15 @@
 
 ### Get started
 
-> npm install
-
-> npm start
+1.  npm install
+2. npm start
 
 ### 環境變數
 > .env
 
-PORT=8000
-LINE_CHANNEL_ACCESS_TOKEN=""
-LINE_CHANNEL_SECRET=""
-line_channel_id=""
+* PORT=8000
+* LINE_CHANNEL_ACCESS_TOKEN=""
+* LINE_CHANNEL_SECRET=""
+* line_channel_id=""
 
 
