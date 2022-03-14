@@ -12,6 +12,7 @@
 ### Get started
 
 > npm install
+
 > npm start
 
 ### 環境變數
