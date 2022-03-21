@@ -43,29 +43,29 @@ function handleEvent(event) {
   client.getProfile(userId)
   .then((profile) => {
     console.log(event);
-
+    var mapId = event.source.groupId || event.source.userId
     if (event.message.text == "開始遊戲"){
-      data[event.source.groupId] = Math.floor(Math.random()*100);
+      data[mapId] = Math.floor(Math.random()*100);
       const echo = { type: 'text', text: `歡迎 ${profile.displayName} 開起一個遊戲，請猜1-100` };
       return client.replyMessage(event.replyToken, echo);
     } 
-    else if(!data.hasOwnProperty(event.source.groupId)){
+    else if(!data.hasOwnProperty(mapId)){
       const echo = { type: 'text', text: `請先開局，輸入 '開始遊戲'` };
       return client.replyMessage(event.replyToken, echo);
     }
-    else if(data.hasOwnProperty(event.source.groupId)) {
+    else if(data.hasOwnProperty(mapId)) {
       // do check number
       const num = parseInt(event.message.text);
       console.log(num);
-      if (num < 0) {
+      if (isNaN(num)) {
         const echo = { type: 'text', text: `請輸入數字` };
         return client.replyMessage(event.replyToken, echo);
       } else {
 
-        const text = num > data[event.source.groupId] ? '再小一點' : (num == data[event.source.groupId] ? '恭喜你猜對了' : '再大一點')
+        const text = num > data[mapId] ? '再小一點' : (num == data[mapId] ? `恭喜 ${profile.displayName} 猜對了` : '再大一點')
         const echo = { type: 'text', text: text };
-        if (num == data[event.source.groupId])
-          delete data[event.source.groupId];
+        if (num == data[mapId])
+          delete data[mapId];
         return client.replyMessage(event.replyToken, echo);
       }
     }else {
