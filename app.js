@@ -1,6 +1,7 @@
 require('dotenv').config();
 const line = require('@line/bot-sdk');
 const express = require('express');
+const GContext = require('./gameContext');
 const app = express();
 
 // create LINE SDK config from env variables
@@ -10,10 +11,10 @@ const config = {
 };
 
 const client = new line.Client(config);
-
+const gcontext = new GContext(client);
 app.post('/callback', line.middleware(config), (req, res) => {
   Promise
-    .all(req.body.events.map(handleEvent))
+    .all(req.body.events.map(event => gcontext.handleEvent(event)))
     .then((result) => res.json(result))
     .catch((err) => {
       console.error(err);
@@ -21,29 +22,6 @@ app.post('/callback', line.middleware(config), (req, res) => {
     });
 });
 
-// event handler
-function handleEvent(event) {
-  if (event.type !== 'message' || event.message.type !== 'text') {
-    // ignore non-text-message event
-    return Promise.resolve(null);
-  }
-  const userId = event.source.userId;
-
-
-  client.getProfile(userId)
-  .then((profile) => {
-    console.log(profile.displayName);
-    // create a echoing text message
-    const echo = { type: 'text', text: `${profile.displayName} say ${event.message.text} ` };
-  
-  
-    // use reply API
-    return client.replyMessage(event.replyToken, echo);
-  })
-  .catch((err) => {
-    // error handling
-  });
-}
 
 // listen on port
 const port = process.env.PORT || 3000;
